@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- 加载配置文件 -->
+	<context:property-placeholder location="classpath:db.properties" />
+
+	<!-- druid数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+		<property name="url" value="${db.url}"/>
+		<property name="username" value="${db.username}"/>
+		<property name="password" value="${db.password}"/>
+
+		<property name="initialSize" value="0"/>
+		<property name="maxActive" value="20"/>
+		<property name="minIdle" value="0"/>
+		<property name="maxWait" value="60000"/>
+	</bean>
+
+	<!-- sessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<!--
+			有两种形式：加载hibernate.cfg.xml配置|直接在这里配置
+		-->
+		<property name="configLocation" value="classpath:hibernate/hibernate.cfg.xml"/>
+
+		<!--直接在这里配置
+			<property name="hibernateProperties">
+				<props>
+					<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+					<prop key="hibernate.show_sql">true</prop>
+					<prop key="hibernate.format_sql">true</prop>
+					<prop key="hibernate.hbm2ddl.auto">update</prop>
+				</props>
+			</property>
+
+			加载xx.hbm.xml形式,也可以在上面使用p:mappingLocations(cn.xx.*.xml)形式
+			<property name="mappingResources">
+				<list>
+					<value>cn/mrx/ssh/pojo/User.hbm.xml</value>
+				</list>
+			</property>
+
+			加载Entity注解形式
+			<property name="annotatedClasses">
+				<list>
+					<value>cn.mrx.ssh.pojo.Role</value>
+				</list>
+			</property>
+			<property name="dataSource" ref="dataSource"/>
+		-->
+
+		<!-- 将数据源注入到sessionFactory -->
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!--
+		将sessionFactory注入dao,也可以使用p空间注入
+	-->
+	<bean id="userDao" class="cn.mrx.ssh.dao.impl.UserDaoImpl">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<bean id="roleDao" class="cn.mrx.ssh.dao.impl.RoleDaoImpl" p:sessionFactory-ref="sessionFactory"/>
+
+
+	<!-- 将sessionFactory注入事务管理 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	<!--
+		注解方式(二选一)
+	 	开启事务注解形式，使用这个的时候就需要具体得Service中使用注解@Transactional
+	 -->
+
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<!--
+		开启事务切面形式
+		<tx:advice id="txAdvice" transaction-manager="transactionManager">
+			<tx:attributes>
+				<tx:method name="load*" read-only="true" />
+				<tx:method name="get*" read-only="true" />
+				<tx:method name="select*" read-only="true" />
+				<tx:method name="*" rollback-for="java.lang.RuntimeException"/>
+			</tx:attributes>
+		</tx:advice>
+
+		<aop:config>
+			第一个*代表所有的返回值类型
+			第二个*代表所有的类
+			第三个*代表类所有方法
+			最后一个..代表所有的参数
+			<aop:advisor advice-ref="txAdvice" pointcut="execution(* cn.mrx.ssh.service..*.*(..))"/>
+		</aop:config>
+	-->
+</beans>
