@@ -25,4 +25,19 @@ public class RoleDaoImpl extends HibernateDaoSupport implements RoleDao {
     public Integer save(Role role) {
         return (Integer) getHibernateTemplate().save(role);
     }
+
+    @Override
+    public Role get(int id) {
+        return getHibernateTemplate().get(Role.class, id);
+    }
+
+    @Override
+    public void delete(Role role) {
+        getHibernateTemplate().delete(role);
+    }
+
+    @Override
+    public void update(Role role) {
+        getHibernateTemplate().update(role);
+    }
 }

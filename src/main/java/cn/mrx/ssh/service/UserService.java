@@ -16,4 +16,6 @@ public interface UserService {
     List<User> loadAll();
 
     Integer save(User user);
+
+    User get(int id);
 }

@@ -36,4 +36,9 @@ public class UserServiceImpl implements UserService{
 //        int a = 10 / 0;
         return res;
     }
+
+    @Override
+    public User get(int id) {
+        return userDao.get(id);
+    }
 }

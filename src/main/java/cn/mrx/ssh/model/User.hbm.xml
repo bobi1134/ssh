@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="cn.mrx.ssh.model.User" table="xxx_user">
+    <class name="cn.mrx.ssh.model.User" table="t_user">
         <id name="id">
             <generator class="identity"/>
         </id>
@@ -13,6 +13,8 @@
         <property name="reallyName" column="really_name"/>
         <property name="regTime" column="reg_time"/>
         <property name="enabled" column="enabled"/>
-        <property name="role" column="role"/>
+
+        <!-- 用户和角色:多对一(双向关联) 默认延迟加载-->
+        <many-to-one name="role" column="roleId" class="cn.mrx.ssh.model.Role"/>
     </class>
 </hibernate-mapping>

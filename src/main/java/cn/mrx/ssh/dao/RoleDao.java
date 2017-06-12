@@ -16,4 +16,10 @@ public interface RoleDao {
     List<Role> loadAll();
 
     Integer save(Role role);
+
+    Role get(int id);
+
+    void delete(Role role);
+
+    void update(Role role);
 }

@@ -16,4 +16,10 @@ public interface RoleService {
     List<Role> loadAll();
 
     Integer save(Role Role);
+
+    Role get(int id);
+
+    void delete(Role role);
+
+    void update(Role role);
 }

@@ -14,7 +14,11 @@ public class User {
     private String reallyName;
     private String regTime;
     private Integer enabled;
-    private Integer role;
+
+    /**
+     * 用户和角色：多对一
+     */
+    private Role role;
 
     public Integer getId() {
         return id;
@@ -64,24 +68,11 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Integer getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(Integer role) {
+    public void setRole(Role role) {
         this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDaoImpl{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", pwd='" + pwd + '\'' +
-                ", reallyName='" + reallyName + '\'' +
-                ", regTime='" + regTime + '\'' +
-                ", enabled=" + enabled +
-                ", role=" + role +
-                '}';
     }
 }

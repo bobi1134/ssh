@@ -1,6 +1,7 @@
 package cn.mrx.ssh.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * @ClassName: Role
@@ -9,20 +10,16 @@ import javax.persistence.*;
  * @Description:
  * @Version 1.0
  */
-@Entity
-@Table(name = "xxx_role")
 public class Role {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Integer id;
-
-    @Column(name = "role_name")
     private String roleName;
-
-    @Column(name = "role_description")
     private String roleDescription;
+
+    /**
+     * 角色和用户：一对多
+     */
+    private Set<User> users;
 
     public Integer getId() {
         return id;
@@ -48,12 +45,11 @@ public class Role {
         this.roleDescription = roleDescription;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", roleName='" + roleName + '\'' +
-                ", roleDescription='" + roleDescription + '\'' +
-                '}';
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

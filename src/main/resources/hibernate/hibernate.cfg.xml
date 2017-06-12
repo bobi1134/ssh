@@ -26,9 +26,10 @@
 			映射文件（xml形式）
 		-->
 		<mapping resource="cn/mrx/ssh/model/User.hbm.xml"/>
+		<mapping resource="cn/mrx/ssh/model/Role.hbm.xml"/>
 		<!--
 			映射文件（注解形式）
+			<mapping class="cn.mrx.ssh.model.Role"/>
 		-->
-		<mapping class="cn.mrx.ssh.model.Role"/>
 	</session-factory>
 </hibernate-configuration>
